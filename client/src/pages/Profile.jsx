@@ -3,8 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { dummyPostsData, dummyUserData } from "../../public/assets";
 import UserProfileInfo from "../components/UserProfileInfo";
-import PostCard from "../components/PostCard"
+import PostCard from "../components/PostCard";
 import moment from "moment";
+import ProfileModel from "../components/ProfileModel";
 
 const Profile = () => {
   const { profileId } = useParams(null);
@@ -50,7 +51,7 @@ const Profile = () => {
           <div className="bg-white rounded-xl shadow p-1 flex max-w-md mx-auto">
             {["posts", "media", "likes"].map((tab) => (
               <button
-              onClick={() => setActiveTab(tab)}
+                onClick={() => setActiveTab(tab)}
                 key={tab}
                 className={`flex-1 px-4 py-2 text-sm font-medium
                 rounded-lg transition-colors cursor-pointer 
@@ -59,42 +60,54 @@ const Profile = () => {
                     ? "bg-indigo-600 text-white"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
-              > {tab.charAt(0).toLocaleUpperCase() + tab.slice(1)}</button>
+              >
+                {" "}
+                {tab.charAt(0).toLocaleUpperCase() + tab.slice(1)}
+              </button>
             ))}
           </div>
 
           {/* posts */}
-          {
-            activeTab === "posts" && (
-              <div className="mt-6 flex flex-col items-center gap-6 ">
-                {posts.map((post) => <PostCard post={post} key={post._id} />)}
-              </div>
-            )
-          }
+          {activeTab === "posts" && (
+            <div className="mt-6 flex flex-col items-center gap-6 ">
+              {posts.map((post) => (
+                <PostCard post={post} key={post._id} />
+              ))}
+            </div>
+          )}
           {/* Media */}
-          {
-            activeTab === "media" && (
-              <div className="flex flex-wrap mt-6 max-w-6xl">
-                  {
-                    posts.filter((post) => post.image_urls.length > 0).map((post) =>(
-                      <>
-                        {post.image_urls.map((image , index) => (
-                          <Link>
-                          <img src={image} key={index} className="-64 aspect-video object-cover" alt="" />
-                          <p className="absolute bottom-0 right-0 text-xs pl-1 px-3 
+          {activeTab === "media" && (
+            <div className="flex flex-wrap mt-6 max-w-6xl">
+              {posts
+                .filter((post) => post.image_urls.length > 0)
+                .map((post) => (
+                  <>
+                    {post.image_urls.map((image, index) => (
+                      <Link target="_blank" to={image} key={index} className="relative group">
+                        <img
+                          src={image}
+                          key={index}
+                          className="w-64 aspect-video object-cover"
+                          alt=""
+                        />
+                        <p
+                          className="absolute bottom-0 right-0 text-xs pl-1 px-3 
                           backdrop-blur-xl text-white opacity-0 group-hover:opacity-100
-                          transition duration-300">
-                            Posted{moment(post.createdAt).fromNow()}
-                          </p>
-                          </Link>
-                        ))}
-                      </>
-                    ))
-                  }
-              </div>
-            )
-          }
+                          transition duration-300"
+                        >
+                          Posted{moment(post.createdAt).fromNow()}
+                        </p>
+                      </Link>
+                    ))}
+                  </>
+                ))}
+            </div>
+          )}
         </div>
+      </div>
+      <div>
+        {/*  */}
+        {showEdit && <ProfileModel setShowEdit={setShowEdit} />}
       </div>
     </div>
   ) : (
